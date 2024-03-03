@@ -3,18 +3,22 @@ Date: 3/1/24
 
 
 ◦ Menu
-◦ Create a toDoList Class
-    ◦ Insert an task
-        ◦ Description
+◦ Create a Task Class
+    ◦ Description
         ◦ Due Date
         ◦ Importance
+          ◦ Need to create a scale  
         ◦ Status
+
+◦ Create a ToDoList Class
+    ◦ Insert an task
     ◦ Delete an task 
     ◦ Sort task
         ◦ By Date
         ◦ By Importance
     ◦ Edit task
-    ◦ Create Label    
+    ◦ Create Label  
+    ◦ Print out list  
 
 
 
