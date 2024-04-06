@@ -129,30 +129,13 @@ void loadFile(ifstream &iFile)
     //format of file 
     //<importance> <month> <day> <year> <label> <name> 
 
-    //prime the ifstream object
-    // struct Task t1;
-    // getline(iFile, t1.label);
-    // getline(iFile, t1.name);
-    // iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
-    // toDoList.push_back(t1);
-
-    // while (!iFile)
-    // {
-    //     struct Task t1;
-    //     getline(iFile, t1.label);
-    //     getline(iFile, t1.name);
-    //     iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
-    //     toDoList.push_back(t1);
-    // }
-
     while (iFile.peek() != EOF && !iFile.eof()) // Check for end of file and ensure file is in a good state
     {
         struct Task t1;
         getline(iFile, t1.label);
         getline(iFile, t1.name);
         iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
-        //iFile.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore newline
-
+        
         toDoList.push_back(t1);
     }
 
