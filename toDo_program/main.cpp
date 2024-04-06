@@ -20,6 +20,7 @@ struct Date
 //struct of task that makes up a list
 struct Task
 {
+    string label;
     string name;
     struct Date dueDate;
     bool status = 0;
@@ -34,7 +35,8 @@ void printToDoList()
 {
     for(struct Task t1 : toDoList)
     {
-        cout  << "[" << t1.name << " (" << t1.importance << ") ]\n"
+        cout  << "|" << t1.label << "|\n"
+              << "[" << t1.name << " (" << t1.importance << ") ]\n"
               << t1.dueDate.month << "-"<< t1.dueDate.day << "-"<< t1.dueDate.year << "\n";
     }
 }
@@ -44,7 +46,10 @@ void addTask()
 {
     struct Task t1;
 
-    cout << "Task Name: ";
+    cout << "Task Label: ";
+    cin >> t1.label;
+
+    cout << "Task Name:  ";
     cin >> t1.name;
 
     cout << "Due Date\nMonth: ";
@@ -75,11 +80,12 @@ void saveFile()
 
     for(struct Task t1 : toDoList)
     {
-        oFile << t1.importance << " "
+        oFile << t1.label << "\n"
+              << t1.name << "\n"
+              << t1.importance << " "
               << t1.dueDate.month << " "
               << t1.dueDate.day << " "
-              << t1.dueDate.year << " "
-              << t1.name << "\n";
+              << t1.dueDate.year << " ";
     }
 
     cout << "Done\n\n";
@@ -88,14 +94,16 @@ void saveFile()
 //read file and fill in list
 void loadFile()
 {
+    string skipNewLine;
     cout << "Loading file...";
     //format of file 
-    //<importance> <month> <day> <year> <name> 
+    //<importance> <month> <day> <year> <label> <name> 
     while (!iFile)
     {
         struct Task t1;
+        getline(iFile, t1.label); iFile >> skipNewLine;
+        getline(iFile, t1.name); iFile >> skipNewLine;
         iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
-        getline(iFile, t1.name);
 
         toDoList.push_back(t1);
     }
