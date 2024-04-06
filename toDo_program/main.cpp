@@ -7,7 +7,6 @@
 using namespace std;
 
 
-
 //struct that holds the parts of the date
 struct Date
 {
@@ -24,6 +23,8 @@ struct Task
     bool status = 0;
     int importance; // [1,3] 1 = low, 2 = med, 3 = high
 };
+
+
 
 //global vars
 list<Task> toDoList;
@@ -129,18 +130,29 @@ void loadFile(ifstream &iFile)
     //<importance> <month> <day> <year> <label> <name> 
 
     //prime the ifstream object
-    struct Task t1;
-    getline(iFile, t1.label);
-    getline(iFile, t1.name);
-    iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
-    toDoList.push_back(t1);
+    // struct Task t1;
+    // getline(iFile, t1.label);
+    // getline(iFile, t1.name);
+    // iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
+    // toDoList.push_back(t1);
 
-    while (!iFile)
+    // while (!iFile)
+    // {
+    //     struct Task t1;
+    //     getline(iFile, t1.label);
+    //     getline(iFile, t1.name);
+    //     iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
+    //     toDoList.push_back(t1);
+    // }
+
+    while (iFile.peek() != EOF && !iFile.eof()) // Check for end of file and ensure file is in a good state
     {
         struct Task t1;
         getline(iFile, t1.label);
         getline(iFile, t1.name);
         iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
+        //iFile.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore newline
+
         toDoList.push_back(t1);
     }
 
@@ -175,12 +187,28 @@ int main (int argc, char * argv[])
     }
 
   
-    // addTask();
-    // addTask();
 
+    /* 
+        back end operations:
+        - update last (remove task with status = 1)
+
+        supported user operations:
+        - a = add task
+        - d = delete task
+        - p = print list
+        - q = quit program
+        - s = sort
+            - i = by importance
+            - d = by due date
+            - 
+
+    */
+
+    // addTask();
+    // addTask();
+    printToDoList();
     // saveFile(oFile);
     
-    printToDoList();
     
     return 0;
 };
