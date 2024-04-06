@@ -1,14 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <list>
+#include <functional>
 
 
 using namespace std;
 
-//create the files first
-ofstream oFile("toDo_file"); //writes to file
-
-ifstream iFile("toDo_file"); //reads from file
 
 
 //struct that holds the parts of the date
@@ -30,15 +27,29 @@ struct Task
 //global vars
 list<Task> toDoList;
 
+
+void printUnderline(int amount)
+{
+    cout << endl;
+    for(int i=0; i<amount+2; i++)
+        cout << "-";
+    cout << endl;
+}
+
+
 //list functions
 void printToDoList()
 {
     for(struct Task t1 : toDoList)
     {
-        cout  << "|" << t1.label << "|\n"
-              << "[" << t1.name << " (" << t1.importance << ") ]\n"
-              << t1.dueDate.month << "-"<< t1.dueDate.day << "-"<< t1.dueDate.year << "\n";
+        printUnderline(t1.label.length());
+        cout  << "|" << t1.label << "|"; 
+        printUnderline(t1.label.length());
+
+        cout  << "‣" << t1.name << " (" << t1.importance << ") \n"
+              << "<" << t1.dueDate.month << "-"<< t1.dueDate.day << "-"<< t1.dueDate.year << ">\n";
     }
+    cout << endl;
 }
 
 
@@ -47,10 +58,10 @@ void addTask()
     struct Task t1;
 
     cout << "Task Label: ";
-    cin >> t1.label;
+    getline(cin, t1.label);
 
     cout << "Task Name:  ";
-    cin >> t1.name;
+    getline(cin, t1.name);
 
     cout << "Due Date\nMonth: ";
     cin >> t1.dueDate.month;
@@ -74,36 +85,45 @@ void removeTask()
 }
 
 
-void saveFile()
+void saveFile(fstream &fFile)
 {
     cout << "Saving...";
 
     for(struct Task t1 : toDoList)
     {
-        oFile << t1.label << "\n"
+        fFile << t1.label << "\n"
               << t1.name << "\n"
               << t1.importance << " "
               << t1.dueDate.month << " "
               << t1.dueDate.day << " "
               << t1.dueDate.year << " ";
     }
-
+    fFile.close();
     cout << "Done\n\n";
 }
 
-//read file and fill in list
-void loadFile()
+//create new todo list
+fstream createNewFile()
 {
-    string skipNewLine;
+    cout << "New ToDo list name: ";
+    string fileName;
+    cin >> fileName;
+    return fstream(fileName); //writes to file
+}
+
+//load existing todo lists
+void loadFile(fstream &fFile)
+{
     cout << "Loading file...";
+
     //format of file 
     //<importance> <month> <day> <year> <label> <name> 
-    while (!iFile)
+    while (!fFile)
     {
         struct Task t1;
-        getline(iFile, t1.label); iFile >> skipNewLine;
-        getline(iFile, t1.name); iFile >> skipNewLine;
-        iFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
+        getline(fFile, t1.label);
+        getline(fFile, t1.name);
+        fFile >> t1.importance >> t1.dueDate.month >> t1.dueDate.day >> t1.dueDate.year;
 
         toDoList.push_back(t1);
     }
@@ -114,11 +134,31 @@ void loadFile()
 
 int main (int argc, char * argv[])
 {
-    loadFile();
+    function<fstream()> func; //use when create a new todo list
 
+    printToDoList();
+    
+    cout << "(1) Create new ToDo list\n";
+    cout << "(2) Load existing ToDO list\n";
+    cout << ">>>> ";
+    int userSelection = -1;
+    cin >> userSelection;
+
+
+
+  
+    if (userSelection == 1) 
+        func = &createNewFile;
+    fstream fFile = func();
+
+    if (userSelection == 2)
+        loadFile(fFile);
+
+  
+    addTask();
     addTask();
 
-    saveFile();
+    saveFile(fFile);
     
     printToDoList();
     
