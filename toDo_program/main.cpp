@@ -94,6 +94,34 @@ void removeTask()
     
 }
 
+// adds new list to our list database
+void addListToDB (string newFileName)
+{
+    cout << "Adding to DB...";
+
+    //write to DB
+    ofstream writer ("listDB.txt", std::ios_base::app | std::ios_base::ate);
+    writer << newFileName << endl;
+
+    cout << "DONE!\n\n";
+}
+
+void printListDB()
+{
+    cout << "[All To-Do List]\n";
+    ifstream reader("listDB.txt");
+
+    int counter = 1;
+    string readerVal;
+
+    while (reader.peek() != EOF && !reader.eof()) // Check for end of file and ensure file is in a good state
+    {
+        cout << counter << ") "; 
+        getline(reader,readerVal);
+        cout << readerVal << endl;
+        counter++;
+    }
+}
 
 void saveFile(ofstream &oFile)
 {
@@ -118,6 +146,9 @@ ofstream createNewFile()
     cout << "New ToDo list name: ";
     string fileName;
     cin >> fileName;
+    fileName += ".txt";
+
+    addListToDB(fileName); // store it in our database of ToDo list
 
     return ofstream(fileName); //writes to file
 }
@@ -147,26 +178,39 @@ int main (int argc, char * argv[])
 {
     function<ofstream()> func; //use when create a new todo list
     
-    cout << "(1) Create new ToDo list\n";
-    cout << "(2) Load existing ToDO list\n";
+    cout << "(1) Create new To-Do list\n";
+    cout << "(2) Load existing To-DO list\n";
+    cout << "(3) Display all To-Do list\n";
+    cout << "\n(0) Quit\n";
+
     cout << ">>>> ";
     int userSelection = -1;
     cin >> userSelection;
 
     ofstream oFile;
 
-    if (userSelection == 1) 
+    switch (userSelection)
     {
-        func = &createNewFile;
-        oFile = func();
-    }
-    else if(userSelection == 2)
-    {
-        cout << "Enter file name: ";
-        string fileName;
-        cin >> fileName;
-        ifstream iFile(fileName);
-        loadFile(iFile);
+        case 1: 
+        {
+            func = &createNewFile;
+            oFile = func();
+            break;
+        }
+        case 2:
+        {
+            cout << "Enter file name: ";
+            string fileName;
+            cin >> fileName;
+            ifstream iFile(fileName);
+            loadFile(iFile);
+            break;
+        }
+        case 3: // display all ToDo List
+        {
+            printListDB();
+            break;
+        }
     }
 
   
