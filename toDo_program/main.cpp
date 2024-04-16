@@ -2,6 +2,7 @@
 #include <fstream>
 #include <list>
 #include <functional>
+#include <vector>
 
 
 using namespace std;
@@ -28,6 +29,7 @@ struct Task
 
 //global vars
 list<Task> toDoList;
+vector<string> listDB;
 
 
 void printUnderline(int amount)
@@ -173,21 +175,40 @@ void loadFile(ifstream &iFile)
     cout <<"DONE\n";
 }
 
+// displays operation and have user selection one
+int displayMenu()
+{
+    list<string> menuList;
+    
+    menuList.push_back("Quit");
+    menuList.push_back("Create new To-Do list");
+    menuList.push_back("Load existing To-DO list");
+    menuList.push_back("Display all To-Do list");
+    menuList.push_back("Create new To-Do list");
 
+    int counter = 0;
+
+    for(string val : menuList)
+    {
+        cout << counter << ") " << val << endl;
+        counter++;
+    }
+
+    cout << "\n>>>> ";
+    int selection = -1;
+    cin >> selection;
+
+    return selection;
+}
 int main (int argc, char * argv[])
 {
-    function<ofstream()> func; //use when create a new todo list
-    
-    cout << "(1) Create new To-Do list\n";
-    cout << "(2) Load existing To-DO list\n";
-    cout << "(3) Display all To-Do list\n";
-    cout << "\n(0) Quit\n";
+    // used when create a new todo list
+    function<ofstream()> func; 
+    ofstream oFile; 
 
-    cout << ">>>> ";
-    int userSelection = -1;
-    cin >> userSelection;
+    bool loadAFile = false;
 
-    ofstream oFile;
+    int userSelection = displayMenu();
 
     switch (userSelection)
     {
@@ -204,16 +225,24 @@ int main (int argc, char * argv[])
             cin >> fileName;
             ifstream iFile(fileName);
             loadFile(iFile);
+            loadAFile = true;
             break;
         }
         case 3: // display all ToDo List
         {
             printListDB();
+            cout << "\nSelect one >>>>";
             break;
+        }
+        case 0: 
+        {   
+            cout << "Have a great day! :D\n";
+            return 0; // terminate program
         }
     }
 
-  
+
+
 
     /* 
         back end operations:
@@ -235,6 +264,8 @@ int main (int argc, char * argv[])
     // addTask();
     printToDoList();
     // saveFile(oFile);
+
+    
     
     
     return 0;
