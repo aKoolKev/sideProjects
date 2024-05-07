@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device width, initial-scale=1">
+        <title>To-Do List App</title>
+
+        <!--Linking style sheet-->
+        <link rel="stylesheet" href="style.css"> 
+    </head>
+
+    <body>
+        <!-- background -->
+        <div class="container">   
+
+            <!-- The todo app  -->
+            <div class="todo-app">
+                <h1>To-Do List <img src="images/to-do-list.png"></h1>
+                
+                <!-- Display today's date -->
+                <div class="current-date"> 
+                    <h4 id="todayDate">Today's Date: </h4> 
+                </div>
+        
+
+                <!-- Input box field -->
+                <div class="taskRow">
+                    <!-- Task name -->
+                    <input type="text" id="input-box" placeholder="Enter task">
+                </div>
+
+                <!-- Task description row and submit button -->
+                <div class="descriptionRow">
+
+                    <!-- Task due date -->
+                    <div class="dueDate">
+                        <h5 style="vertical-align: middle;">Due date:</h5>
+                        <input type="date" id="dueDate" value="">
+                    </div>
+
+                    <div class="importance">
+                        <h5>Importance:</h5> 
+                        <select id="importance">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option> 
+                            <!-- most urgent -->
+                        </select>
+                    </div>
+
+                    
+
+                    <!-- Add task -->
+                    <button id="submit-button" onclick="addTask()">Add</button>
+                </div>
+
+                <!-- List of task(s) -->
+                <hr>
+
+                <ul id="list-container">
+                    <!-- <li class="checked">Task 1</li>
+                    <li>Task 2</li>
+                    <li>Task 3</li> -->
+                </ul>
+
+            </div>
+
+
+        </div>
+
+        <!-- Link javascript file -->
+        <script src="script.js"></script>
+    
+    </body>
+</html>

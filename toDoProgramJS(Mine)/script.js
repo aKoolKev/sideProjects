@@ -2,6 +2,8 @@ const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("list-container");
 const submitButton = document.getElementById("submit-button");
 
+
+
 //function to handle key press event
 function handleKeyPress(event) {
     //check if the pressed key is Enter (key code 13)
@@ -18,11 +20,23 @@ function addTask(){
         alert("You must write something!");
     }
     else{
-        //add task to the list
+        //grab select value (importance)
+        const selectElement = document.getElementById("importance");
+
+        //grab due date
+        const dateElement = document.getElementById("dueDate");
+
+        //add task name to the list
         let li = document.createElement("li");
         li.innerHTML = inputBox.value;
         listContainer.appendChild(li);
 
+        //add task subfield description
+        let subfield = document.createElement("p");
+        subfield.innerHTML = selectElement.value + dateElement.value; // add importance
+        li.appendChild(subfield);
+
+        
         //add option to delete task
         let span = document.createElement("span");
         span.innerHTML = "\u00d7"; // adds a "cross" icon
@@ -61,5 +75,31 @@ function loadData(){
     listContainer.innerHTML = localStorage.getItem("data");
 }
 
+//displays the current date
+function getTodayDate(){
+    const date = new Date();
+    const day = date.getDate();
+    const month = date.getMonth()+1; // Jan = 0
+    const year = date.getFullYear()-2000; // only the 2 right most digits
+    const todayDate = document.getElementById("todayDate");
+    todayDate.innerHTML += `[${month}-${day}-${year}]`;
+}
+
+
+// Add an event listener to the <select> element to capture changes
+document.getElementById('importance').addEventListener('click', function() {
+// Get the selected value from the <select> element 
+var selectedValue = this.value;
+
+// Save the selected value to sessionStorage (or any other storage method)
+sessionStorage.setItem('selectedOption', selectedValue);
+
+// Optionally, provide feedback to the user or perform further actions
+// console.log('Option saved: ' + selectedValue);
+// alert('Option saved: ' + selectedValue);
+},false);
+
+
 // MAIN
 loadData();
+getTodayDate();

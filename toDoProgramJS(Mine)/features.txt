@@ -1,0 +1,19 @@
+* Option to create new list
+
+* TASK
+    - Add info about TASK
+        - Importance
+        - Due date
+            - closer to due date, the vibrant the red
+        - Description field
+
+    - sort by
+        - due date
+        - Importance
+
+    - color code TASK
+
+    - show number of task created
+        - number completed
+        - number deleted
+
