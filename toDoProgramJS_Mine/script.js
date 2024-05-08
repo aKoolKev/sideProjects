@@ -3,7 +3,6 @@ const listContainer = document.getElementById("list-container");
 const submitButton = document.getElementById("submit-button");
 
 
-
 //function to handle key press event
 function handleKeyPress(event) {
     //check if the pressed key is Enter (key code 13)
@@ -21,10 +20,12 @@ function addTask(){
     }
     else{
         //grab select value (importance)
-        const selectElement = document.getElementById("importance");
+        const importance= document.getElementById("importanceSelect").value;
 
         //grab due date
-        const dateElement = document.getElementById("dueDate");
+        const monthDue = document.getElementById("monthDueSelect").value;
+        const dayDue = document.getElementById("dayDueSelect").value;
+        const yearDue = document.getElementById("yearDueSelect").value;
 
         //add task name to the list
         let li = document.createElement("li");
@@ -33,7 +34,7 @@ function addTask(){
 
         //add task subfield description
         let subfield = document.createElement("p");
-        subfield.innerHTML = selectElement.value + dateElement.value; // add importance
+        subfield.innerHTML = "[" + monthDue + "/" + dayDue + "/" + yearDue +"] (" + importance + ")"; // add importance
         li.appendChild(subfield);
 
         
@@ -85,19 +86,25 @@ function getTodayDate(){
     todayDate.innerHTML += `[${month}-${day}-${year}]`;
 }
 
+//clear all task in todo list
+function clearList(){
+    const length = listContainer.childNodes.length; 
+    for (let i = 1; i <= length; i++) {
+        listContainer.lastElementChild.remove();     
+    }
+    saveData();
+}
+//Add an event listener to the importance select element
+// document.getElementById('importance').addEventListener('click', function() {
+//     var selectedValue = this.value; // Get the selected value from the <select> element 
+//     sessionStorage.setItem('selectedOption', selectedValue); // Save the selected value to sessionStorage (or any other storage method)
+// },false);
 
-// Add an event listener to the <select> element to capture changes
-document.getElementById('importance').addEventListener('click', function() {
-// Get the selected value from the <select> element 
-var selectedValue = this.value;
-
-// Save the selected value to sessionStorage (or any other storage method)
-sessionStorage.setItem('selectedOption', selectedValue);
-
-// Optionally, provide feedback to the user or perform further actions
-// console.log('Option saved: ' + selectedValue);
-// alert('Option saved: ' + selectedValue);
-},false);
+// // Add an event listener to the due month select element
+// document.getElementById('monthDue').addEventListener('click', function() {
+//     var selectedValue = this.value; // Get the selected value from the <select> element 
+//     sessionStorage.setItem('selectedOption', selectedValue); // Save the selected value to sessionStorage (or any other storage method)
+// },false);
 
 
 // MAIN
