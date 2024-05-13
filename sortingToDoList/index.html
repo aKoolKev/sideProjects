@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Sorting To Do List</title>
+    </head>
+    <body>
+
+        <center> <h1>To Do List</h1> </center>
+        
+        <hr>
+
+
+        <div class="inputRow" style="padding: 20px; display: flex; align-items: center; justify-content: center;">
+            <input id="taskName" type="text" placeholder="Enter a task...">
+
+            <!-- Month due -->
+            <select id="monthDue">
+                <option id="defaultMonth" selected disabled>Month</option>
+            </select>
+
+            <!-- Day due -->
+            <select id="dayDue">
+                <option id="defaultDate" selected disabled>Date</option>
+            </select>
+
+            <select id="yearDue">
+                <option id="defaultYear" selected disabled>Year</option>
+            </select>
+
+            <select id="importance">
+                <option id="defaultImportance" selected disabled>Importance</option>
+            </select>
+
+        </div>
+
+        <hr>
+
+        <div class="buttonRow" style="display: flex; align-items: center; justify-content: center;">
+            <button onclick="addTask()">Add</button>
+            <button onclick="clearTask()">Empty</button>
+            <button onclick="sortByDate()">Sort Date</button>
+            <button onclick="sortByImportance()">Sort Importance</button>
+        </div>
+
+        <hr>
+
+        <div class="displayTask" style="display: flex; align-items: center; justify-content: center;">   
+            <ul id="listContainer">
+                <!-- <li>Task1</li>
+                <li>Task2</li>
+                <li>Task3</li> -->
+            </ul>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
+
+<!-- TODO -->
+<!-- 
+    * Delete a single task
+    * Complete a task
+    * Move due date and importance underneath task
+    * Sort by importance
+    * Sort by date
+ -->
