@@ -8,10 +8,32 @@ var importance5 = [];
 
 
 //Task object
-function Task(name, dueDate, importance)
+function Task(name, monthDue, dateDue, yearDue, importance)
 {
     this.name = name;
-    this.dueDate = dueDate;
+    this.monthDue = monthDue;
+    this.dateDue = dateDue;
+    this.yearDue = yearDue;
+    this.dueDateStr = monthDue + '/' + dateDue + '/' + yearDue;
+
+    
+    let temp = yearDue;
+
+
+    //appropriate place values
+    if (monthDue < 10){
+        temp += '0'+ monthDue;
+    } else {
+        temp += monthDue;
+    }
+    if (dateDue < 10){
+        temp += '0' + dateDue; 
+    } else {
+        temp += dateDue;
+    }
+    
+    this.dueDateVal = temp;
+
     this.importance = importance;
 }
 
@@ -31,15 +53,13 @@ function addTask(){
         return;
     } 
 
-    var dueDate = monthEl.value + '/' + dayEl.value + '/' + yearEl.value;
-
     //create new Task obj
-    var newTask = new Task(taskEl.value, dueDate, importanceEl.value);
+    var newTask = new Task(taskEl.value, monthEl.value, dayEl.value, yearEl.value, importanceEl.value);
 
     //display task
     var spanEl = document.getElementById('listContainer');
     var liEl = document.createElement('li');
-    liEl.textContent = newTask.name + ' ' + newTask.dueDate + ' (' + newTask.importance + ')';
+    liEl.textContent = newTask.name + ' ' + newTask.dueDateStr + ' (' + newTask.importance + ')';
     spanEl.appendChild(liEl);
 
 
@@ -90,10 +110,11 @@ function addTask(){
 //print all Task in arr
 function print_taskList(){
     var spanEl = document.getElementById('listContainer');
-    
+    spanEl.innerText = '';
+
     for (var i=0; i<taskList.length;i++){
         var newTask = document.createElement('li');
-        newTask.textContent = taskList[i].name + ' ' + taskList[i].dueDate + ' (' + taskList[i].importance + ')';
+        newTask.textContent = taskList[i].name + ' ' + taskList[i].dueDateStr + ' (' + taskList[i].importance + ')';
         spanEl.appendChild(newTask);
     }
 }
@@ -120,10 +141,41 @@ function clearTask(){
     spanEl.innerText = '';
 }
 
-// //sort Task by due date (most urgent)
-// function sortByDate(){
 
-// }
+//sort Task by due date (most urgent)
+function sortByDate(){
+    //achieved with counting sort
+
+    //get the max of the input list
+    let max = 0;
+    for (let i = 0; i < taskList.length; i++){
+        max = Math.max(max,taskList[i].dueDateVal);
+    }
+
+    //create count array to store the count of each element
+    let countArr = new Array(max+1).fill(0);
+
+    //mapping each element of taskList as an inex of countArray
+    for (let i=0; i<taskList.length;i++){
+        countArr[taskList[i].dueDateVal]++;
+    }
+
+    //calculating prefix sum at every index of countArr
+    for (let i = 1; i <= max; i++){
+        countArr[i] += countArr[i-1];//.dueDateVal;
+    }
+
+    //create sortedArr from countArr
+    const sortedArr = new Array(taskList.length);
+    for (let i = taskList.length-1; i>=0; i--){
+        sortedArr[countArr[taskList[i].dueDateVal]-1] = taskList[i];
+        countArr[taskList[i].dueDateVal]--;
+    }
+
+    taskList = sortedArr;
+
+    print_taskList();
+}
 
 //sort Task by importance
 function sortByImportance(){
@@ -132,17 +184,18 @@ function sortByImportance(){
     var ulEl = document.getElementById('listContainer');
     ulEl.innerText = '';
     
-    alert('i1;'+importance1.length);
-    alert('i2;'+importance2.length);
-    alert('i3;'+importance3.length);
-    alert('i4;'+importance4.length);
-    alert('i5;'+importance5.length);
+    //debug
+    // alert('i1;'+importance1.length);
+    // alert('i2;'+importance2.length);
+    // alert('i3;'+importance3.length);
+    // alert('i4;'+importance4.length);
+    // alert('i5;'+importance5.length);
 
 
     if (importance5.length > 0){
         for (var i=0;i<importance5.length;i++){
             let liEl = document.createElement('li');
-            liEl.textContent = importance5[i].name + ' ' + importance5[i].dueDate + ' (' + importance5[i].importance + ')';
+            liEl.textContent = importance5[i].name + ' ' + importance5[i].dueDateStr + ' (' + importance5[i].importance + ')';
             ulEl.appendChild(liEl);
         }
     }
@@ -150,7 +203,7 @@ function sortByImportance(){
     if (importance4.length > 0){
         for (var i=0;i<importance4.length;i++){
             let liEl = document.createElement('li');
-            liEl.textContent = importance4[i].name + ' ' + importance4[i].dueDate + ' (' + importance4[i].importance + ')';
+            liEl.textContent = importance4[i].name + ' ' + importance4[i].dueDateStr + ' (' + importance4[i].importance + ')';
             ulEl.appendChild(liEl);
         }
     }
@@ -158,7 +211,7 @@ function sortByImportance(){
     if (importance3.length > 0){
         for (var i=0;i<importance3.length;i++){
             let liEl = document.createElement('li');
-            liEl.textContent = importance3[i].name + ' ' + importance3[i].dueDate + ' (' + importance3[i].importance + ')';
+            liEl.textContent = importance3[i].name + ' ' + importance3[i].dueDateStr + ' (' + importance3[i].importance + ')';
             ulEl.appendChild(liEl);
         }
     }
@@ -166,7 +219,7 @@ function sortByImportance(){
     if (importance2.length > 0){
         for (var i=0;i<importance2.length;i++){
             let liEl = document.createElement('li');
-            liEl.textContent = importance2[i].name + ' ' + importance2[i].dueDate + ' (' + importance2[i].importance + ')';
+            liEl.textContent = importance2[i].name + ' ' + importance2[i].dueDateStr + ' (' + importance2[i].importance + ')';
             ulEl.appendChild(liEl);
         }
     }
@@ -174,7 +227,7 @@ function sortByImportance(){
     if (importance1.length > 0){
         for (var i=0;i<importance1.length;i++){
             var liEl = document.createElement('li');
-            liEl.textContent = importance1[i].name + ' ' + importance1[i].dueDate + ' (' + importance1[i].importance + ')';
+            liEl.textContent = importance1[i].name + ' ' + importance1[i].dueDateStr + ' (' + importance1[i].importance + ')';
             ulEl.appendChild(liEl);
         }
     }
