@@ -57,12 +57,17 @@ function addTask(){
     var newTask = new Task(taskEl.value, monthEl.value, dayEl.value, yearEl.value, importanceEl.value);
 
     //display task
-    var spanEl = document.getElementById('listContainer');
+    var listContainerEl = document.getElementById('listContainer');
     var liEl = document.createElement('li');
-    liEl.textContent = newTask.name + ' ' + newTask.dueDateStr + ' (' + newTask.importance + ')';
-    spanEl.appendChild(liEl);
-
-
+    liEl.textContent = newTask.name;
+    
+    //create subfield under liEl to store the due date and importance
+    var subfieldBoxEl = document.createElement('div');
+    subfieldBoxEl.textContent = '[' + newTask.dueDateStr + '] (' + newTask.importance + ')';
+    
+    liEl.appendChild(subfieldBoxEl);
+    listContainerEl.appendChild(liEl);
+    
     //categorize Task by importance
     switch (importanceEl.value){
         case '1':
@@ -109,13 +114,16 @@ function addTask(){
 
 //print all Task in arr
 function print_taskList(){
-    var spanEl = document.getElementById('listContainer');
-    spanEl.innerText = '';
+    var listContainerEl = document.getElementById('listContainer');
+    listContainerEl.innerText = '';
 
     for (var i=0; i<taskList.length;i++){
         var newTask = document.createElement('li');
-        newTask.textContent = taskList[i].name + ' ' + taskList[i].dueDateStr + ' (' + taskList[i].importance + ')';
-        spanEl.appendChild(newTask);
+        var newTaskSubfield = document.createElement('div');
+        newTask.textContent = taskList[i].name;
+        newTaskSubfield.textContent = '[' + taskList[i].dueDateStr + '] (' + taskList[i].importance + ')';
+        newTask.appendChild(newTaskSubfield);
+        listContainerEl.appendChild(newTask);
     }
 }
 
@@ -177,6 +185,26 @@ function sortByDate(){
     print_taskList();
 }
 
+//function that prints out a given array
+function printArr(arr){
+    if (arr.length < 0){
+        return;
+    } else {
+        var ulEl = document.getElementById('listContainer');
+
+        for (let i=0; i < arr.length; i++)
+        {
+            let liEl = document.createElement('li');
+            liEl.textContent = arr[i].name;
+
+            let liSubEl = document.createElement('div');
+            liSubEl.textContent = '[' + arr[i].dueDateStr + '] (' + arr[i].importance + ')';
+            liEl.appendChild(liSubEl);
+            ulEl.appendChild(liEl);
+        }
+    }
+}
+
 //sort Task by importance
 function sortByImportance(){
     alert('sortByImportance');
@@ -191,47 +219,11 @@ function sortByImportance(){
     // alert('i4;'+importance4.length);
     // alert('i5;'+importance5.length);
 
-
-    if (importance5.length > 0){
-        for (var i=0;i<importance5.length;i++){
-            let liEl = document.createElement('li');
-            liEl.textContent = importance5[i].name + ' ' + importance5[i].dueDateStr + ' (' + importance5[i].importance + ')';
-            ulEl.appendChild(liEl);
-        }
-    }
-
-    if (importance4.length > 0){
-        for (var i=0;i<importance4.length;i++){
-            let liEl = document.createElement('li');
-            liEl.textContent = importance4[i].name + ' ' + importance4[i].dueDateStr + ' (' + importance4[i].importance + ')';
-            ulEl.appendChild(liEl);
-        }
-    }
-
-    if (importance3.length > 0){
-        for (var i=0;i<importance3.length;i++){
-            let liEl = document.createElement('li');
-            liEl.textContent = importance3[i].name + ' ' + importance3[i].dueDateStr + ' (' + importance3[i].importance + ')';
-            ulEl.appendChild(liEl);
-        }
-    }
-
-    if (importance2.length > 0){
-        for (var i=0;i<importance2.length;i++){
-            let liEl = document.createElement('li');
-            liEl.textContent = importance2[i].name + ' ' + importance2[i].dueDateStr + ' (' + importance2[i].importance + ')';
-            ulEl.appendChild(liEl);
-        }
-    }
-
-    if (importance1.length > 0){
-        for (var i=0;i<importance1.length;i++){
-            var liEl = document.createElement('li');
-            liEl.textContent = importance1[i].name + ' ' + importance1[i].dueDateStr + ' (' + importance1[i].importance + ')';
-            ulEl.appendChild(liEl);
-        }
-    }
-
+    printArr(importance5);
+    printArr(importance4);
+    printArr(importance3);
+    printArr(importance2);
+    printArr(importance1);
 }
 
 
