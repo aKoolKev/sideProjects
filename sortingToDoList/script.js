@@ -56,17 +56,30 @@ function addTask(){
     //create new Task obj
     var newTask = new Task(taskEl.value, monthEl.value, dayEl.value, yearEl.value, importanceEl.value);
 
-    //display task
-    var listContainerEl = document.getElementById('listContainer');
-    var liEl = document.createElement('li');
-    liEl.textContent = newTask.name;
-    
-    //create subfield under liEl to store the due date and importance
-    var subfieldBoxEl = document.createElement('div');
-    subfieldBoxEl.textContent = '[' + newTask.dueDateStr + '] (' + newTask.importance + ')';
-    
-    liEl.appendChild(subfieldBoxEl);
-    listContainerEl.appendChild(liEl);
+
+    // //display task
+    // var listContainerEl = document.getElementById('listContainer');
+
+    // var liEl = document.createElement('li');
+
+    // //complete "button"
+    // var inputEl = document.createElement('input');
+    // inputEl.type = 'radio';
+    // liEl.appendChild(inputEl); //add radio button
+
+    // liEl.appendChild (document.createTextNode(newTask.name)); // add task name
+
+    // //create subfield under liEl to store the due date and importance
+    // var subfieldBoxEl = document.createElement('div');
+    // subfieldBoxEl.textContent = '[' + newTask.dueDateStr + '] (' + newTask.importance + ')';
+    // liEl.appendChild(subfieldBoxEl); //add subfield to li
+
+    // //delete task button
+    // buttonEl = document.createElement('button');
+    // buttonEl.textContent = 'X'; 
+    // subfieldBoxEl.appendChild(buttonEl); //add delete button
+
+    // listContainerEl.appendChild(liEl); //write li to ul
     
     //categorize Task by importance
     switch (importanceEl.value){
@@ -110,6 +123,8 @@ function addTask(){
     dayEl.selectedIndex = 0;
     yearEl.selectedIndex = 0;
     importanceEl.selectedIndex = 0;
+
+    print_taskList();
 }
 
 //print all Task in arr
@@ -119,11 +134,28 @@ function print_taskList(){
 
     for (var i=0; i<taskList.length;i++){
         var newTask = document.createElement('li');
+
+        //complete "button"
+        let inputEl = document.createElement('input');
+        inputEl.type = 'radio';
+
+        newTask.appendChild(inputEl); // add complete button
+
+        newTask.appendChild(document.createTextNode(taskList[i].name)); // add task name
+
+        //create subfield for due date and importance
         var newTaskSubfield = document.createElement('div');
-        newTask.textContent = taskList[i].name;
         newTaskSubfield.textContent = '[' + taskList[i].dueDateStr + '] (' + taskList[i].importance + ')';
-        newTask.appendChild(newTaskSubfield);
-        listContainerEl.appendChild(newTask);
+        newTaskSubfield.id = 'subfield';
+        newTask.appendChild(newTaskSubfield); // add subfield 
+        
+        //delete task button
+        let buttonEl = document.createElement('button');
+        buttonEl.textContent = 'X'; 
+        buttonEl.id = 'del_button';
+        newTaskSubfield.appendChild(buttonEl); // add delete button
+
+        listContainerEl.appendChild(newTask); //write li to ul
     }
 }
 
@@ -195,10 +227,25 @@ function printArr(arr){
         for (let i=0; i < arr.length; i++)
         {
             let liEl = document.createElement('li');
-            liEl.textContent = arr[i].name;
 
+            //complete button
+            let inputEl = document.createElement('input');
+            inputEl.type = 'radio';
+            liEl.appendChild(inputEl); //add complete button
+
+            liEl.appendChild(document.createTextNode(arr[i].name)); //add task name
+
+            //subfield
             let liSubEl = document.createElement('div');
             liSubEl.textContent = '[' + arr[i].dueDateStr + '] (' + arr[i].importance + ')';
+            liSubEl.id = 'subfield';
+
+            //delete task button
+            buttonEl = document.createElement('button');
+            buttonEl.textContent = 'X';
+            buttonEl.id = 'del_button'; 
+
+            liSubEl.appendChild(buttonEl);
             liEl.appendChild(liSubEl);
             ulEl.appendChild(liEl);
         }
@@ -207,7 +254,6 @@ function printArr(arr){
 
 //sort Task by importance
 function sortByImportance(){
-    alert('sortByImportance');
     
     var ulEl = document.getElementById('listContainer');
     ulEl.innerText = '';

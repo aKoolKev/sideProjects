@@ -1,0 +1,34 @@
+ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+input[type="radio"]{
+  margin-right: 10px;
+  transform: scale(1.25);
+  cursor: pointer;
+}
+
+#del_button {
+  margin-left: 25px;
+  cursor: pointer;
+
+}
+
+#subfield {
+  margin-left: 25px;
+  padding-bottom: 20px;
+}
+
+.buttonRow, .displayTask{
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+
+.inputRow {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

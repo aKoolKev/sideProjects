@@ -2,6 +2,7 @@
 <html>
     <head>
         <title> Sorting To Do List</title>
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
 
@@ -10,7 +11,7 @@
         <hr>
 
 
-        <div class="inputRow" style="padding: 20px; display: flex; align-items: center; justify-content: center;">
+        <div class="inputRow">
             <input id="taskName" type="text" placeholder="Enter a task...">
 
             <!-- Month due -->
@@ -35,7 +36,7 @@
 
         <hr>
 
-        <div class="buttonRow" style="display: flex; align-items: center; justify-content: center;">
+        <div class="buttonRow">
             <button onclick="addTask()">Add</button>
             <button onclick="clearTask()">Empty</button>
             <button onclick="sortByDate()">Sort Date</button>
@@ -44,7 +45,7 @@
 
         <hr>
 
-        <div class="displayTask" style="display: flex; align-items: center; justify-content: center;">   
+        <div class="displayTask">   
             <ul id="listContainer">
                 <!-- <li>Task1</li>
                 <li>Task2</li>
@@ -58,6 +59,7 @@
 
 <!-- TODO -->
 <!-- 
-    * Delete a single task
-    * Complete a task
+    * Delete a single task (remove task from list)
+    * Complete a task (cross out task name)
+    * Put button and del button in the same "row"
  -->
