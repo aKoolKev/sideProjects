@@ -1,3 +1,6 @@
+h1 {
+  text-align: center;
+}
 html {
   font-size: 18px;
   font-family:Arial, Helvetica, sans-serif;
@@ -5,7 +8,7 @@ html {
 
 ul {
     list-style-type: none;
-    padding: 0;
+    margin: auto;
   }
   
 input {
@@ -13,18 +16,21 @@ input {
   margin: 15px;
 }
 
-input[type="radio"]{
+input[type="checkbox"]{
   margin-right: 10px;
   transform: scale(1.25);
   cursor: pointer;
 }
 
-button {
-  font-size: 15px;
-  margin: 10px;
-  padding: 5px;
+.crossOut {
+  text-decoration: line-through;
 }
 
+button {
+  font-size: 15px;
+  /* margin: 10px;
+  padding: 5px; */
+}
 
 select {
   font-size: 20px; 
@@ -34,11 +40,10 @@ select {
 #del_button {
   margin-left: 25vw;
   cursor: pointer;
-
 }
 
 #subfield {
-  margin-left: 25px;
+  margin-left: 35px; /* Align subfield with Task name */
   padding-bottom: 20px;
 }
 
@@ -46,6 +51,13 @@ select {
   display: flex; 
   align-items: center; 
   justify-content: center;
+}
+
+.buttonRow {
+  justify-content: space-evenly;
+  width: 50vw;
+  margin: auto;
+
 }
 
 .inputRow {

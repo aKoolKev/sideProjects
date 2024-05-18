@@ -35,6 +35,8 @@ function Task(name, monthDue, dateDue, yearDue, importance)
     this.dueDateVal = temp;
 
     this.importance = importance;
+
+    this.isChecked = false;
 }
 
 //add a Task to the arr
@@ -113,7 +115,8 @@ function printTaskList(){
 
         //complete "button"
         let inputEl = document.createElement('input');
-        inputEl.type = 'radio';
+        inputEl.type = 'checkbox';
+        inputEl.addEventListener('click', crossTask, false); // event to toggle crossing out task
 
         newTask.appendChild(inputEl); // add complete button
 
@@ -132,7 +135,57 @@ function printTaskList(){
         buttonEl.addEventListener('click', deleteTask, false); // event to delete a task
         newTaskSubfield.appendChild(buttonEl); // add delete button
 
+
+        //cross out if it has been checked
+        if (taskList[i].isChecked){
+            newTask.classList.add('crossOut'); // apply the cross out
+            inputEl.checked = true; // check the check box
+        }
+
         listContainerEl.appendChild(newTask); //write li to ul
+    }
+}
+
+//function that prints out a given array
+function printArr(arr){
+    if (arr.length < 0){
+        return;
+    } else {
+        var ulEl = document.getElementById('listContainer');
+
+        for (let i=0; i < arr.length; i++)
+        {
+            let liEl = document.createElement('li');
+
+            //complete button
+            let inputEl = document.createElement('input');
+            inputEl.type = 'checkbox';
+            inputEl.addEventListener('click', crossTask, false); // event to toggle crossing out task
+            liEl.appendChild(inputEl); //add complete button
+
+            liEl.appendChild(document.createTextNode(arr[i].name)); //add task name
+
+            //subfield
+            let liSubEl = document.createElement('div');
+            liSubEl.textContent = '[' + arr[i].dueDateStr + '] (' + arr[i].importance + ')';
+            liSubEl.id = 'subfield';
+
+            //delete task button
+            buttonEl = document.createElement('button');
+            buttonEl.textContent = 'X';
+            buttonEl.id = 'del_button';
+            buttonEl.addEventListener('click', deleteTask, false); // event to delete a task 
+
+            //cross out if it has been checked
+            if (arr[i].isChecked){
+                liEl.classList.add('crossOut'); // apply the cross out
+                inputEl.checked = true; // check the check box
+            }
+
+            liSubEl.appendChild(buttonEl);
+            liEl.appendChild(liSubEl);
+            ulEl.appendChild(liEl);
+        }
     }
 }
 
@@ -198,64 +251,22 @@ function sortByDate(){
     printTaskList();
 }
 
-//function that prints out a given array
-function printArr(arr){
-    if (arr.length < 0){
-        return;
-    } else {
-        var ulEl = document.getElementById('listContainer');
-
-        for (let i=0; i < arr.length; i++)
-        {
-            let liEl = document.createElement('li');
-
-            //complete button
-            let inputEl = document.createElement('input');
-            inputEl.type = 'radio';
-            liEl.appendChild(inputEl); //add complete button
-
-            liEl.appendChild(document.createTextNode(arr[i].name)); //add task name
-
-            //subfield
-            let liSubEl = document.createElement('div');
-            liSubEl.textContent = '[' + arr[i].dueDateStr + '] (' + arr[i].importance + ')';
-            liSubEl.id = 'subfield';
-
-            //delete task button
-            buttonEl = document.createElement('button');
-            buttonEl.textContent = 'X';
-            buttonEl.id = 'del_button';
-            buttonEl.addEventListener('click', deleteTask, false); // event to delete a task 
-
-            liSubEl.appendChild(buttonEl);
-            liEl.appendChild(liSubEl);
-            ulEl.appendChild(liEl);
-        }
-    }
-}
-
 //sort Task by importance
 function sortByImportance(){ 
+    // base case: nothing to sort
     if (importance1.length+importance2.length+importance3.length+importance4.length+importance5.length < 1){
         alert('No task to sort!');
         return;
     }
 
-    var ulEl = document.getElementById('listContainer');
-    ulEl.innerText = '';
-    
-    //debug
-    // alert('i1;'+importance1.length);
-    // alert('i2;'+importance2.length);
-    // alert('i3;'+importance3.length);
-    // alert('i4;'+importance4.length);
-    // alert('i5;'+importance5.length);
+    // clear task array
+    taskList.splice(0, taskList.length);
 
-    printArr(importance5);
-    printArr(importance4);
-    printArr(importance3);
-    printArr(importance2);
-    printArr(importance1);
+    //sort in descending importance
+    taskList = [...importance5, ...importance4, ...importance3, ...importance2, ... importance1];
+
+    //print out sorted list
+    printTaskList();
 }
 
 
@@ -354,7 +365,7 @@ function loadTaskList(){
     importance5 = JSON.parse(retrievedArrStr)|| [];
 }
 
-
+//remove a single Task when delete button is clicked
 function deleteTask(e){
     var targetEl = e.target;
     var divEl = targetEl.parentNode;
@@ -365,6 +376,95 @@ function deleteTask(e){
 
     //EX: test[5/17/2024] (1)X
 
+    // let taskName = liEl.textContent.split('['); // [test, 5/17/2024] (1)X]
+    
+    // let dueDate = taskName[1].split(']'); // [5/17/2024, (1)X]
+
+    // let importance = dueDate[1].split('('); // [   , 1)X]
+    // importance = importance[1].split(')'); // [ 1, X]
+
+
+    // //set all values
+    // taskName = taskName[0];
+    // dueDate = dueDate[0];
+    // importance = importance[0];
+
+    //new code
+    TaskInfo = parseTaskInfo(liEl);
+    let taskName = TaskInfo[0];
+    let dueDate = TaskInfo[1];
+    let importance = TaskInfo[2];
+    console.log('TaskName: ' + TaskInfo[0]);
+    console.log('DueDate: ' + TaskInfo[1]);
+    console.log('Importance: ' + TaskInfo[2]);
+
+
+    //try to find and remove in taskList
+    for(let i=0; i<taskList.length; i++){
+        if (taskList[i].name === taskName && taskList[i].dueDateStr === dueDate && taskList[i].importance === importance){
+            taskList.splice(i,1);
+            save('taskList',taskList);
+            break;
+        }
+    }
+    
+    // need to delete task from importance arrays as well
+    updateImportanceArr(TaskInfo, true, false, null);
+}
+
+//cross out a completed task
+function crossTask(e){
+    var checkBox = e.target;
+    var liEl = checkBox.parentNode;
+    
+
+    //get the task info
+    let taskInfo = parseTaskInfo(liEl);
+    let taskName = taskInfo[0];
+    let dueDate = taskInfo[1];
+    let importance = taskInfo[2];
+
+
+    //update Task Object
+    let TaskObjIndex;
+    //try to find the object and update if it is checked or not
+    for(let i=0; i<taskList.length; i++){
+        if (taskList[i].name === taskName && taskList[i].dueDateStr === dueDate && taskList[i].importance === importance){
+            // alert('found!');    //debug
+            TaskObjIndex = i;
+
+
+            if (checkBox.checked){
+                //apply the cross out visually
+                liEl.classList.add('crossOut');
+                //update object
+                taskList[TaskObjIndex].isChecked = true;
+                save('taskList', taskList);
+                //update Task in importance arrays
+                // updateImportanceArr(taskInfo, false, true, true)
+                
+            } else {
+                //uncross out
+                liEl.classList.remove('crossOut');
+                //update object
+                taskList[TaskObjIndex].isChecked = false;
+                save('taskList', taskList);
+                //update Task in importance arrays
+                // updateImportanceArr(taskInfo, false, true, false)
+            }
+
+            break;
+        }
+    }
+
+   
+
+    
+}
+
+//returns an array that contains task name, due date and importance 
+function parseTaskInfo(liEl){
+    //EX: test[5/17/2024] (1)X
     let taskName = liEl.textContent.split('['); // [test, 5/17/2024] (1)X]
     
     let dueDate = taskName[1].split(']'); // [5/17/2024, (1)X]
@@ -378,23 +478,24 @@ function deleteTask(e){
     dueDate = dueDate[0];
     importance = importance[0];
 
-    //try to find and remove in taskList
-    for(let i=0; i<taskList.length; i++){
-        if (taskList[i].name === taskName && taskList[i].dueDateStr === dueDate && taskList[i].importance === importance){
-            // alert('found!');    
-            taskList.splice(i,1);
-            save('taskList',taskList);
-            break;
-        }
-    }
-    
-    // need to delete task from importance arrays as well
+    return TaskInfo = [taskName, dueDate, importance];
+}
+
+function updateImportanceArr(parseTaskInfoArr, isDeletingTask, isUpdatingCheck, isUpdatingCheckVal){
+
+    let taskName = parseTaskInfoArr[0];
+    let dueDate = parseTaskInfoArr[1];
+    let importance = parseTaskInfoArr[2];
+
     switch (importance)
     {
         case '1':{
             for (let i=0; i<importance1.length; i++){
                 if (importance1[i].name === taskName && importance1[i].dueDateStr === dueDate){
-                    importance1.splice(i,1);
+                    if (isDeletingTask)
+                        importance1.splice(i,1);
+                    else if (isUpdatingCheck)
+                        importance1[i].isChecked = isUpdatingCheckVal;
                     save('importance1',importance1);
                     break;
                 }
@@ -404,7 +505,10 @@ function deleteTask(e){
         case '2':{
             for (let i=0; i<importance2.length; i++){
                 if (importance2[i].name === taskName && importance2[i].dueDateStr === dueDate){
-                    importance2.splice(i,1);
+                    if (isDeletingTask)
+                        importance2.splice(i,1);
+                    else if (isUpdatingCheck)
+                        importance2[i].isChecked = isUpdatingCheckVal;
                     save('importance2',importance2);
                     break;
                 }
@@ -414,7 +518,10 @@ function deleteTask(e){
         case '3':{
             for (let i=0; i<importance3.length; i++){
                 if (importance3[i].name === taskName && importance3[i].dueDateStr === dueDate){
-                    importance3.splice(i,1);
+                    if (isDeletingTask)
+                        importance3.splice(i,1);
+                    else if (isUpdatingCheck)
+                        importance3[i].isChecked = isUpdatingCheckVal;
                     save('importance3',importance3);
                     break;
                 }
@@ -424,7 +531,10 @@ function deleteTask(e){
         case '4':{
             for (let i=0; i<importance4.length; i++){
                 if (importance4[i].name === taskName && importance4[i].dueDateStr === dueDate){
-                    importance4.splice(i,1);
+                    if (isDeletingTask)
+                        importance4.splice(i,1);
+                    else if (isUpdatingCheck)
+                        importance4[i].isChecked = isUpdatingCheckVal;
                     save('importance4',importance4);
                     break;
                 }
@@ -434,7 +544,10 @@ function deleteTask(e){
         case '5':{
             for (let i=0; i<importance5.length; i++){
                 if (importance5[i].name === taskName && importance5[i].dueDateStr === dueDate){
-                    importance5.splice(i,1);
+                    if (isDeletingTask)
+                        importance5.splice(i,1);
+                    else if (isUpdatingCheck)
+                        importance5[i].isChecked = isUpdatingCheckVal;
                     save('importance5',importance5);
                     break;
                 }
@@ -446,4 +559,5 @@ function deleteTask(e){
             break;
         }
     }
+
 }
