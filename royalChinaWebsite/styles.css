@@ -1,0 +1,158 @@
+html {
+    font-size:x-large; 
+    background: linear-gradient(to bottom, rgb(222, 231, 223), #fff);
+}
+
+#restuarantName {
+    text-align: center;
+    color: rgb(205, 49, 49);
+}
+
+/* Hours */
+table{
+    margin: 0 auto;
+    text-align: center;
+}
+
+.days{
+    width: 150px; /* Adjust the width as needed */
+
+}
+.time {
+    width: 200px;
+    text-align: left;
+    text-indent: 20px;
+}
+
+/* Centering iframe */
+.mapContainer{
+    text-align: center;
+}
+.mapContainer iframe{
+    margin: 0 auto; /* Centers the iframe horizontally */
+    display: block; /* Ensures the iframe is treated as a block element */
+    max-width: 100%; /* Ensures the iframe doesn't exceed its container's width */
+}
+
+a{
+    /* remove underline on link */
+    text-decoration: none;
+}
+
+h3{
+    text-align: center;
+    color: crimson;
+}
+
+h4{
+    color:crimson;
+    text-decoration: underline;
+    padding-top: 20px;
+}
+
+input[type=number] {
+    width: 6vw;
+    margin-left: 10px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+input[type="checkbox"]{
+    /* width: 12px;
+    height: 17px;
+    transform: scale(1.5); */
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+button{
+    margin-left: 25vw;
+}
+li {
+    padding: 5px;
+}
+
+p{
+    text-align: center;
+}
+
+.categories-container {
+    display: flex;
+    gap: 15px; /* space between columns */
+    justify-content: center; /*center columns horizontally*/
+    align-items: center; /*center columns vertically*/
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.column {
+    flex:none; /* all columns take equal space */
+    background-color: whitesmoke;
+    padding: 25px;
+}
+
+.column button {
+    display: block; /* make buttons block-level elements */
+    margin: 20px; /* remove default margin */
+    border: none;
+    font-size: large;
+    padding:15px;
+    background-color: lightcoral;
+    border-radius: 10px;
+    font-weight:bold;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+#back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: whitesmoke;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    /* display: none; Hide initially */
+    z-index: 999; /*Ensure it's above other content*/
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+  
+.column button:hover {
+    background-color: lightgray;
+    transform: scale(1.05);    /* Slightly increase size on hover */
+}
+
+#back-to-top:hover{
+    background-color: lightgray;
+    transform: scale(1.05);    /* Slightly increase size on hover */
+}
+
+#top {
+    padding:20px;
+}
+
+.placeHolderButton{
+    opacity: 0; /* Make the button invisible */
+    border: none;         
+    background: none;
+}
+
+#shoppingCartButton{
+    position: fixed;
+    bottom: 20px;
+    right: 100px;
+    background-color: olivedrab;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    /* display: none; Hide initially */
+    z-index: 999; /*Ensure it's above other content*/
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+#shoppingCartButton:hover{
+    background-color: lightgray;
+    transform: scale(1.05);    /* Slightly increase size on hover */
+}
