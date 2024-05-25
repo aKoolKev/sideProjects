@@ -3,6 +3,10 @@ html {
     background: linear-gradient(to bottom, rgb(222, 231, 223), #fff);
 }
 
+.checkOutPage{
+    background: lightgrey;
+}
+
 #restuarantName {
     text-align: center;
     color: rgb(205, 49, 49);
@@ -50,12 +54,15 @@ h4{
     padding-top: 20px;
 }
 
-input[type=number] {
-    width: 6vw;
+input[type="number"] {
+    width: 70px;
     margin-left: 10px;
     text-align: center;
     display: inline-block;
     vertical-align: middle;
+    position: absolute;
+    right: 0;
+    margin-right: 100px;
 }
 
 input[type="checkbox"]{
@@ -66,8 +73,18 @@ input[type="checkbox"]{
     margin-right: 10px;
 }
 
-button{
-    margin-left: 25vw;
+span {
+    position: absolute;
+    right: 0;
+    margin-right: 190px;
+}
+
+.addItemButton{
+    position: absolute;
+    right: 0;
+    margin-right: 50px;
+    color: #555;
+    text-align: center;
 }
 li {
     padding: 5px;
@@ -90,6 +107,7 @@ p{
     flex:none; /* all columns take equal space */
     background-color: whitesmoke;
     padding: 25px;
+    width: 15vw;
 }
 
 .column button {
