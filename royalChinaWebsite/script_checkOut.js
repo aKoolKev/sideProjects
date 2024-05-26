@@ -22,6 +22,7 @@ function saveList(){
     var jsonStr = JSON.stringify(orderItem_list);
     //store 
     localStorage.setItem('orderItem_list', jsonStr);
+    alert('saved!');
 }
 
 function displayCheckOut(){
@@ -30,23 +31,35 @@ function displayCheckOut(){
     //load the list
     loadList();
 
-    if (orderItem_list.length < 0)
+    if (orderItem_list.length == 0)
         return;
+
+
     //where to write to 
     var olEl = document.getElementById('orderSummary-container');
 
     for (let i=0; i<orderItem_list.length; i++){
         //add to subtotal
-        itemSubTotal = orderItem_list[i].price*orderItem_list[i].quantity;
+        var itemSubTotal = orderItem_list[i].price*orderItem_list[i].quantity;
         subTotal += itemSubTotal;
 
         var liEl = document.createElement('li');
-        liEl.appendChild(document.createTextNode(orderItem_list[i].name + '...[' + orderItem_list[i].quantity + '] $' + orderItem_list[i].price + ' = $' + itemSubTotal.toFixed(2)));
+        liEl.appendChild(document.createTextNode(
+            orderItem_list[i].name + '... [' + 
+            orderItem_list[i].quantity));
+
+        if (orderItem_list[i].size){
+            liEl.appendChild(document.createTextNode('- ' + orderItem_list[i].size));
+        }
+        liEl.appendChild(document.createTextNode(
+            '] $' + orderItem_list[i].price.toFixed(2) + ' = $' + 
+            itemSubTotal.toFixed(2)));
+
+        
 
        
         //write to page
         olEl.appendChild(liEl);
-        itemSubTotal = 0;
     }
 
     //alert('done looping');
@@ -58,7 +71,7 @@ function displayCheckOut(){
     var h4El = document.getElementById('totalCost');
     //get grandTotal
     grandTotal += (subTotal + (subTotal*tax));
-    h4El.innerHTML += grandTotal.toFixed(2);
+    h4El.innerHTML = 'Total: $' + grandTotal.toFixed(2);
 }
 
 
@@ -67,5 +80,13 @@ function displayCheckOut(){
 var payButtonEl = document.getElementById('payButton').addEventListener('click', function(){
     orderItem_list.length = 0;
     saveList();
-    displayCheckOut();
+    alert('Thank you!');
+    //redirect to home page!
+    window.location.href = 'index.html';
+},false);
+
+
+var backButtonEl = document.getElementById('backButton').addEventListener('click', function(){
+    saveList();
+    window.location.href = 'index.html';
 },false);

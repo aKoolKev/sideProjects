@@ -12,6 +12,7 @@ html {
     color: rgb(205, 49, 49);
 }
 
+
 /* Hours */
 table{
     margin: 0 auto;
@@ -54,40 +55,28 @@ h4{
     padding-top: 20px;
 }
 
-input[type="number"] {
-    width: 70px;
-    margin-left: 10px;
-    text-align: center;
-    display: inline-block;
-    vertical-align: middle;
-    position: absolute;
-    right: 0;
-    margin-right: 100px;
-}
-
-input[type="checkbox"]{
-    /* width: 12px;
-    height: 17px;
-    transform: scale(1.5); */
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-span {
-    position: absolute;
-    right: 0;
-    margin-right: 190px;
-}
 
 .addItemButton{
     position: absolute;
     right: 0;
     margin-right: 50px;
+
     color: #555;
     text-align: center;
+    background-color: lightgreen;
+    border-radius: 20px;
+    padding: 7px;
+    width: 50px;
 }
+
+.addItemButton:hover{
+    background-color: lightgray;
+    transform: scale(1.05);    /* Slightly increase size on hover */
+}
+
 li {
-    padding: 5px;
+    padding: 20px;
+    list-style: square;
 }
 
 p{
@@ -112,7 +101,7 @@ p{
 
 .column button {
     display: block; /* make buttons block-level elements */
-    margin: 20px; /* remove default margin */
+    margin-bottom: 20px;
     border: none;
     font-size: large;
     padding:15px;
@@ -120,6 +109,12 @@ p{
     border-radius: 10px;
     font-weight:bold;
     transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+    width: 100%;
+}
+
+.column button:hover {
+    background-color: lightgray;
+    transform: scale(1.05);    /* Slightly increase size on hover */
 }
 
 #back-to-top {
@@ -136,10 +131,7 @@ p{
     transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
 }
   
-.column button:hover {
-    background-color: lightgray;
-    transform: scale(1.05);    /* Slightly increase size on hover */
-}
+
 
 #back-to-top:hover{
     background-color: lightgray;
@@ -160,10 +152,10 @@ p{
     position: fixed;
     bottom: 20px;
     right: 100px;
-    background-color: olivedrab;
+    background-color: lightgreen;
     color: black;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     text-decoration: none;
     /* display: none; Hide initially */
     z-index: 999; /*Ensure it's above other content*/
@@ -174,3 +166,61 @@ p{
     background-color: lightgray;
     transform: scale(1.05);    /* Slightly increase size on hover */
 }
+
+.quantitySmall, .quantityLarge{
+    width: 70px;
+    margin-left: 10px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    
+    background: yellow;
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+}
+
+
+.appetizerInputNumber, .quantityLargeInputNumber, .quantitySmallInputNumber{
+    width: 70px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 20px;
+    padding: 7px;
+    border-style: solid;
+
+}
+
+.appetizerInputNumber{
+    position: absolute;
+    right: 0;
+    margin-right: 120px;
+}
+
+.quantitySmallInputNumber{
+    /* background-color: yellow; */
+    position: absolute;
+    right: 0;
+    margin-right: 390px;
+}
+
+.quantityLargeInputNumber{
+    /* background-color: green; */
+    position: absolute;
+    right: 0;
+    margin-right: 120px;
+}
+
+.smallPriceFormat{
+    /* background-color: yellow; */
+    position: absolute;
+    right: 0;
+    margin-right: 500px;
+}
+
+.largePriceFormat{
+    /* background-color: green; */
+    position: absolute;
+    right: 0;
+    margin-right: 225px;
+}
+
