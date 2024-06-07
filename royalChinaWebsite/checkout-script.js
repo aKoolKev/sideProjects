@@ -1,7 +1,3 @@
-window.onload = function() {
-    // Scroll to the top of the page
-    displayCheckOut();
-}
 //global vars
 var orderItem_list; 
 var subTotal = 0;
@@ -9,12 +5,10 @@ var grandTotal = 0;
 var tax = 0.08475; 
 
 function loadList(){
-    // alert('grabbing...');
     //grab string array
     var jsonStr = localStorage.getItem('orderItem_list');
     //turn it back to an array
     orderItem_list = JSON.parse(jsonStr);
-    // alert(orderItem_list.length);
 }
 
 function saveList(){
@@ -22,11 +16,10 @@ function saveList(){
     var jsonStr = JSON.stringify(orderItem_list);
     //store 
     localStorage.setItem('orderItem_list', jsonStr);
-    alert('saved!');
+    alert('Added!');
 }
 
 function displayCheckOut(){
-    //alert('hi');
     
     //load the list
     loadList();
@@ -44,29 +37,31 @@ function displayCheckOut(){
         subTotal += itemSubTotal;
 
         var liEl = document.createElement('li');
-        liEl.appendChild(document.createTextNode(
-            orderItem_list[i].name + '... [' + 
-            orderItem_list[i].quantity));
+        liEl.appendChild(document.createTextNode(orderItem_list[i].name));
 
+        //it is a combo order
+        if (orderItem_list[i].side != '')
+            liEl.appendChild(document.createTextNode(' with ' + orderItem_list[i].side));
+      
+
+        liEl.appendChild(document.createTextNode(
+            ' . . . . . [' + 
+            orderItem_list[i].quantity
+        ));
+
+        //size
         if (orderItem_list[i].size){
             liEl.appendChild(document.createTextNode('- ' + orderItem_list[i].size));
         }
+
+        //price
         liEl.appendChild(document.createTextNode(
-            '] $' + orderItem_list[i].price.toFixed(2) + ' = $' + 
+            'x] $' + orderItem_list[i].price.toFixed(2) + ' = $' + 
             itemSubTotal.toFixed(2)));
 
-        
-
-       
         //write to page
         olEl.appendChild(liEl);
     }
-
-    //alert('done looping');
-    
-    
-    
-    //alert(subTotal);
 
     var h4El = document.getElementById('totalCost');
     //get grandTotal
@@ -81,12 +76,15 @@ var payButtonEl = document.getElementById('payButton').addEventListener('click',
     orderItem_list.length = 0;
     saveList();
     alert('Thank you!');
-    //redirect to home page!
+    //redirect to home page
     window.location.href = 'index.html';
 },false);
 
 
 var backButtonEl = document.getElementById('backButton').addEventListener('click', function(){
-    saveList();
-    window.location.href = 'index.html';
+    window.location.href = 'index.html#categoriesTop';
 },false);
+
+
+//main
+displayCheckOut();

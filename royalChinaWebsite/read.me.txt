@@ -1,0 +1,10 @@
+[TO-DO]
+
+* Seperate style sheets
+* Comment functions
+* Organize layout
+
+* Display item details (Easy)
+* Indidate spicy items (Easy)
+* Remove item from shopping cart (Mild)
+* 

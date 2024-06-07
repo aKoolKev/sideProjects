@@ -1,15 +1,32 @@
 html {
     font-size:x-large; 
-    background: linear-gradient(to bottom, rgb(222, 231, 223), #fff);
+
+    /* text color */
+    color: #2E475D; 
 }
 
-.checkOutPage{
-    background: lightgrey;
+/* Hide the toolbar completely (it won't take up any space) */
+.toolbar {
+    display: none;
 }
+
+/* Hide the toolbar but it still takes up space */
+.toolbar {
+    visibility: hidden;
+}
+
+/* checkOut.html */
+.checkOutPage{
+    background: beige;
+    text-align: center;
+}
+
+
+
 
 #restuarantName {
     text-align: center;
-    color: rgb(205, 49, 49);
+    color: crimson;
 }
 
 
@@ -50,10 +67,12 @@ h3{
 }
 
 h4{
-    color:crimson;
+    color: crimson;
     text-decoration: underline;
     padding-top: 20px;
+    text-align: center;
 }
+
 
 
 .addItemButton{
@@ -94,7 +113,7 @@ p{
 
 .column {
     flex:none; /* all columns take equal space */
-    background-color: whitesmoke;
+    background-color: none;
     padding: 25px;
     width: 15vw;
 }
@@ -105,7 +124,7 @@ p{
     border: none;
     font-size: large;
     padding:15px;
-    background-color: lightcoral;
+    background-color: rgb(250, 92, 92);
     border-radius: 10px;
     font-weight:bold;
     transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
@@ -224,3 +243,16 @@ p{
     margin-right: 225px;
 }
 
+.sideSelect{
+    background-color: lightcoral;
+    position: absolute;
+    right: 0;
+    margin-right: 165px;
+    height: 30px;
+    
+    text-align-last: center;
+    font-size: medium;
+}
+
+
+ 
