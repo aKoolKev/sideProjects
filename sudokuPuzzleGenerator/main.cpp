@@ -1,12 +1,21 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <cstdlib> // For system()
+#include <thread>
+#include <chrono>
 
 
 using namespace std;
 
-int sudokuBoard[9][9] = {{0}}; //initialize sudoku board with all 0
-int cellsLeft = 81; // cells left to fill on sudoku board
+
+
+string sudokuBoard[9][9]; //declare sudoku board
+
+vector<vector<int>> sudokuBoardAnswer(9,vector<int>(9,0)); //holds the answers for the game mode
+
+unsigned cellsLeft = 81; // cells left to fill on sudoku board
+
 
 
 //print the content of sudoku board
@@ -15,14 +24,22 @@ void printBoard()
     int verticalCounter = 0;
     int horizonalBorderCounter = 0;
 
+    //initial spacing
+    cout << "    ";
+
+    //print column number
+    for (int i=1; i<=9; i++)
+        cout << i << "   ";
+    cout << endl;
+
     //top border 
-    cout << "╔═══════════════════════════════════╗\n";
+    cout << "  ╔═══════════════════════════════════╗\n";
 
 
     for (int row=0; row<9; row++)
     {
         //initial leading vertical bar for each row
-        cout << "║ ";
+        cout << row+1 <<  " ║ ";
 
         //print all the column of current row
         for (int col=0; col<9; col++)
@@ -46,14 +63,14 @@ void printBoard()
         if (horizonalBorderCounter == 3)
         {
             if (row != 8) //fancy intermediate horizontal border
-                cout << "\n║═══════════║═══════════║═══════════║\n";
+                cout << "\n  ║═══════════║═══════════║═══════════║\n";
             else //last bottom border
-                cout << "\n╚═══════════════════════════════════╝\n";
+                cout << "\n  ╚═══════════════════════════════════╝\n";
 
             horizonalBorderCounter = 0;
         }
         else //not fancy intermediate horizonal border 
-            cout << "\n║---+---+---║---+---+---║---+---+---║\n";
+            cout << "\n  ║---+---+---║---+---+---║---+---+---║\n";
     }
 }
 
@@ -82,14 +99,14 @@ bool isInRow(int currRow, int currCol, int currVal)
     //check from beginning col to curr col
     for (int col=0; col < currCol; col++)
     {
-        if (sudokuBoard[currRow][col] == currVal)
+        if (stoi(sudokuBoard[currRow][col]) == currVal)
             return true;
     }
 
     //check from curr column to the end column
     for (int col = currCol+1; col<9; col++)
     {
-         if (sudokuBoard[currRow][col] == currVal)
+         if (stoi(sudokuBoard[currRow][col]) == currVal)
             return true;
     }
 
@@ -102,20 +119,19 @@ bool isInColumn(int currRow, int currCol, int currVal)
     //check from top row to current row
     for (int row=0; row < currRow; row++)
     {
-        if (sudokuBoard[row][currCol] == currVal)
+        if (stoi(sudokuBoard[row][currCol]) == currVal)
             return true;
     }
 
     //check from currRow to the end row
     for (int row = currRow+1; row<9; row++)
     {
-         if (sudokuBoard[row][currCol] == currVal)
+         if (stoi(sudokuBoard[row][currCol]) == currVal)
             return true;
     }
 
     return false;
 }
-
 
 //helper function to the isInSquare that does the actual checking
 bool checkSquareHelper(string whichRow, string whichCol, int currRow, int currCol, int valToInsert)
@@ -186,14 +202,13 @@ bool checkSquareHelper(string whichRow, string whichCol, int currRow, int currCo
                 return false;
 
             // number already exists in this sub-square
-            if (sudokuBoard[row][col] == valToInsert && row != currRow && col != currCol) 
+            if (stoi(sudokuBoard[row][col]) == valToInsert && row != currRow && col != currCol) 
                 return true;
         }
     }
 
     return false; // number does not exist in this square
 }
-
 
 //indicate if value exists in current position's sub-square
 bool isInSquare(int currRow, int currCol, int valToInsert)
@@ -269,18 +284,17 @@ bool generateNewBoard(int currRow, int currCol)
                         break;
                     }
                 }
-                // did not find it 
+                //value not found, thus value ready used
                 indexPos = 0;
             }
 
-            //try rand number
+            //does this number fit the cell?
             if (!isInSquare(currRow,currCol,randNum) && !isInRow(currRow, currCol,randNum) && !isInColumn(currRow, currCol,randNum))
             {
-                // it worked
-                sudokuBoard[currRow][currCol] = randNum;
+                //it works
+                sudokuBoard[currRow][currCol] = to_string(randNum);
         
-
-                //new position on board
+                //move to the next cell
                 if (currCol == 8)
                 {
                     currRow++;
@@ -293,106 +307,46 @@ bool generateNewBoard(int currRow, int currCol)
 
                 cellsLeft--;
 
-                //cross it out from our list because we used it
+                //remove number from number pool since we are using it
                 possibleNum.erase(possibleNum.begin()+indexPos);
             
-
-                //number worked...try to do next cell
+                //number worked...try to do the next cell
                 bool status = generateNewBoard(currRow, currCol);
 
+            
                 if (status)
                     return true;
-                else
+                else //the call before could not place a number...must change current value to something else
                 {
-                    //undo move
+                    //undo the move
                     cellsLeft++;
-                    sudokuBoard[currRow][currCol] = 0;
+                    sudokuBoard[currRow][currCol] = "0";
 
                     //put back number into list
                     possibleNum.push_back(randNum);
 
+                    //go back to previous cell since we modify it before doing the recursive call
                     currRow = prevRow;
                     currCol = prevCol;
                 }
             }
             //curr num does not work
             possibleNum.erase(possibleNum.begin()+indexPos);
-        
-    //none of the 9 possible number worked, previous needs to change their number
-    }
-
         }
 
-        
+    }
 
-
-
-
-        
-       
-
-
-
-
-
-
-    //     for (int possibleNumber = 1; possibleNumber <= 9; possibleNumber++)
-    //     {
-            
-    //         if (!isInSquare(currRow,currCol,possibleNumber) && !isInRow(currRow, currCol,possibleNumber) && !isInColumn(currRow, currCol,possibleNumber))
-    //         {
-    //             // it worked
-    //             sudokuBoard[currRow][currCol] = possibleNumber;
-        
-
-    //             //new position on board
-    //             if (currCol == 8)
-    //             {
-    //                 currRow++;
-    //                 currCol = 0;
-    //             }
-    //             else
-    //             {
-    //                 currCol++;
-    //             }
-            
-
-    //             //debug
-    //             // printBoard();
-
-    //             cellsLeft--;
-
-    //             //number worked...try to do next cell
-    //             bool status = generateNewBoard(currRow, currCol);
-
-    //             if (status)
-    //                 return true;
-    //             else
-    //             {
-    //                 //undo move
-    //                 cellsLeft++;
-    //                 sudokuBoard[currRow][currCol] = 0;
-    //                 currRow = prevRow;
-    //                 currCol = prevCol;
-    //             }
-    //         }
-    //         //curr num does not work
-    //     }
-    // //none of the 9 possible number worked, previous needs to change their number
-    // }
-       
-    // return false;
-
-    return false;
+    //all possible 9 numbers did not work
+    return false; 
 }
 
-
+//indicate if each value in each cell does not violate the rules of Sudoku
 void checkBoard()
 {
     for (int row = 0; row <=8; row++)
         for (int col = 0; col <=8; col++)
         {
-            int val = sudokuBoard[row][col];
+            int val = stoi (sudokuBoard[row][col]);
             if (isInSquare(row, col, val) || isInColumn(row, col, val) || isInRow(row, col, val))
             {
                 cout << "\nInvalid board!\n";
@@ -403,14 +357,178 @@ void checkBoard()
     cout << "\nValid board!\n"; 
 }
 
+//generate (x) amounts of random pairs of row x col based on difficulty
+void generateGameBoard(unsigned int emptyCells)
+{
+    int randRow = -1;
+    int randCol = -1;
+
+    while (emptyCells > 0 )
+    {
+        randRow = getRandNum()-1;
+        randCol = getRandNum()-1;
+
+        if (sudokuBoardAnswer[randRow][randCol] == 0) //0 means has not been visited
+        {
+            //remember the answer 
+            sudokuBoardAnswer[randRow][randCol] = stoi (sudokuBoard[randRow][randCol]);
+            sudokuBoard[randRow][randCol] = " "; //unmark game board
+            emptyCells--;
+        }
+        
+        //cell has been used...pick a different cell
+    }
+}
+
+//display life bar (max of 5)
+void printLifeBar(unsigned int livesLeft)
+{
+    cout << "LIFE BAR: ";
+
+    for (int i = 0; i<livesLeft; i++)
+        cout << "♥";
+    for (int i = 0; i<5-livesLeft; i++)
+        cout << "♡";
+
+    cout << "\n\n";
+}
+
+//clear terminal screen
+void clearScreen()
+{
+    system("clear");
+}
+
+//halt program for (x) seconds
+void sleepFor (unsigned int seconds)
+{
+    this_thread::sleep_for(std::chrono::seconds(seconds));
+}
+
+//create a board to solve and prompt for user to fill it in
+void gameMode()
+{
+    clearScreen();
+
+    //select difficulty
+    cout << "    SELECT A DIFFICULTY    \n";
+    cout << "----------------------------\n";
+    cout << " EASY.............[Press 1]\n"; //easy 30 empty spaces
+    cout << " MEDIUM...........[Press 2]\n"; //medium 40 empty spaces
+    cout << " HARD.............[Press 3]\n"; //hard 50 empty spaces
+    cout << " EXTREME..........[Press 4]\n"; //extreme 60 empty spaces
+    cout << "----------------------------\n\n";
+
+    unsigned int userDifficulty = 0;
+    cout << "Your selection >>> ";
+    cin >> userDifficulty;
+    
+    unsigned int emptySpaces = 0;
+
+    switch (userDifficulty)
+    {
+        case 1: 
+            emptySpaces = 30;
+            generateGameBoard(emptySpaces); break;
+        case 2: 
+            emptySpaces = 40;
+            generateGameBoard(emptySpaces); break;
+        case 3: 
+            emptySpaces = 50;
+            generateGameBoard(emptySpaces); break;
+        case 4: 
+            emptySpaces = 60;
+            generateGameBoard(emptySpaces); break;
+        default: //error handling
+            cout << "Please select a valid option: 1, 2, 3, 4 \n";
+            break;
+    }
+
+    unsigned int userLives = 5;
+    unsigned int userRow = -1;
+    unsigned int userCol = -1;
+    unsigned int userVal = -1;
+
+    clearScreen();
+
+    cout << "\nSTART GAME!\n\n";
+
+    printLifeBar(userLives);
+    printBoard();
+
+    //game loop
+
+    //while lives is not zero and spaces left to fill is not zero
+    while(userLives > 0 && emptySpaces > 0)
+    {
+        //prompt user to select cell
+        cout << "\nEnter row: ";
+        cin >> userRow;
+
+        cout << "Enter column: ";
+        cin >> userCol;
+
+        //prompt user for value
+        cout << "Enter value: ";
+        cin >> userVal;
+        
+        // check their value
+        if (sudokuBoardAnswer[userRow-1][userCol-1] == userVal) //user is correct
+        {
+            //fill in 
+            sudokuBoard[userRow-1][userCol-1] = to_string(userVal);
+
+            cout << "\nCorrect!\n";
+
+            sleepFor(1);
+            emptySpaces--;
+
+            if (emptySpaces <= 0)
+            {
+                cout << "YOU WIN!\n";
+                return;
+            }
+        }
+        else //user is incorrect
+        {
+            cout << "\nIncorrect!\n";
+
+            sleepFor(1); 
+
+            //deduct a life
+            userLives--;
+            
+            //game over message
+            if (userLives <= 0){
+                cout << "\nGAME OVER!\n";
+                return;
+            }
+        }
+
+        clearScreen();
+        printLifeBar(userLives);
+        printBoard();
+    }
+}
+
 
 int main (int argc, char* argv[])
 {
+    // Initialize sudokuBoard with "0"
+    for (int i = 0; i < 9; ++i) 
+        for (int j = 0; j < 9; ++j) 
+            sudokuBoard[i][j] = "0";
+    
+
     generateNewBoard(0,0);
 
-    printBoard();
-
-    checkBoard();
+    gameMode();
 
     return 0;
 }
+
+/*
+TO-DO
+  - show all number still left
+  - add a timer
+*/
