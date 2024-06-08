@@ -14,6 +14,8 @@ string sudokuBoard[9][9]; //declare sudoku board
 
 vector<vector<int>> sudokuBoardAnswer(9,vector<int>(9,0)); //holds the answers for the game mode
 
+vector<int> numbersLeft (9,0); //holds all the value left to fill
+
 unsigned cellsLeft = 81; // cells left to fill on sudoku board
 
 
@@ -370,8 +372,16 @@ void generateGameBoard(unsigned int emptyCells)
 
         if (sudokuBoardAnswer[randRow][randCol] == 0) //0 means has not been visited
         {
+            int valueToRemember = stoi (sudokuBoard[randRow][randCol]);
+
             //remember the answer 
-            sudokuBoardAnswer[randRow][randCol] = stoi (sudokuBoard[randRow][randCol]);
+            sudokuBoardAnswer[randRow][randCol] = valueToRemember;
+
+            //keep track of the number of values left
+        
+            numbersLeft[valueToRemember-1]++;
+            
+
             sudokuBoard[randRow][randCol] = " "; //unmark game board
             emptyCells--;
         }
@@ -403,6 +413,33 @@ void clearScreen()
 void sleepFor (unsigned int seconds)
 {
     this_thread::sleep_for(std::chrono::seconds(seconds));
+}
+
+//print out the values left to quess
+void printNumbersLeft()
+{
+    cout << "Value(s) left: ";
+    int counter = 1;
+    for (int val : numbersLeft)
+    {
+        if (val > 0)
+        {
+            cout << counter;
+
+            //compute the actual size
+            int size = 0;
+
+            for (int val2 : numbersLeft)
+                if (val2 > 0)
+                    size++;
+
+            if (counter<size)
+                cout << ", ";
+        }
+
+        counter++;
+    }
+    cout << endl; //format
 }
 
 //create a board to solve and prompt for user to fill it in
@@ -455,6 +492,7 @@ void gameMode()
 
     printLifeBar(userLives);
     printBoard();
+    printNumbersLeft();
 
     //game loop
 
@@ -483,9 +521,11 @@ void gameMode()
             sleepFor(1);
             emptySpaces--;
 
+            numbersLeft[userVal-1]--;
+
             if (emptySpaces <= 0)
             {
-                cout << "YOU WIN!\n";
+                cout << "\nYOU WIN!\n";
                 return;
             }
         }
@@ -508,17 +548,18 @@ void gameMode()
         clearScreen();
         printLifeBar(userLives);
         printBoard();
+        printNumbersLeft();
     }
 }
 
 
 int main (int argc, char* argv[])
 {
-    // Initialize sudokuBoard with "0"
+   
+ // Initialize sudokuBoard with "0"
     for (int i = 0; i < 9; ++i) 
         for (int j = 0; j < 9; ++j) 
             sudokuBoard[i][j] = "0";
-    
 
     generateNewBoard(0,0);
 
