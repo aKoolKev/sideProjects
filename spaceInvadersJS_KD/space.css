@@ -1,0 +1,13 @@
+body {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    font-size: x-large;
+    /* background-image:image-set("purpleNight.png"); */
+    background-color: darkslategray;
+    
+}
+
+#board{
+    background-color: rgb(77, 75, 75);
+}
