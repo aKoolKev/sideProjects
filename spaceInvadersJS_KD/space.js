@@ -31,6 +31,7 @@ let enemyHeight = tileSize*1.2;
 let enemyX = tileSize;
 let enemyY = tileSize;
 let enemyImg;
+let enemyImgRed;
 let enemyPerRow = 2;
 let enemyPerColumn = 3;
 let enemyCount = 0; //number of enemy to defeat
@@ -69,8 +70,13 @@ window.onload = function() {
         context.drawImage(shipImg, ship.x, ship.y, ship.width, ship.height);
     }
 
-    // enemyImg = new Image();
-    // enemyImg.src = './enemyShip.png';
+    // Preload images
+    enemyImg = new Image();
+    enemyImg.src = './enemyShip.png';
+
+    enemyImgRed = new Image();
+    enemyImgRed.src = './enemyShipRed.png';
+
     createEnemies();
 
 
@@ -81,7 +87,6 @@ window.onload = function() {
 }
 
 function update() {
-    
 
     requestAnimationFrame(update);
     
@@ -95,8 +100,6 @@ function update() {
     
     //repeatedly drawing ship
     context.drawImage(shipImg, ship.x, ship.y, ship.width, ship.height);
-
-    // let shoot = true; 
 
     //draw in alien
     for (let i=0; i<enemyArray.length; i++){
@@ -114,12 +117,9 @@ function update() {
                 for (let j=0; j<enemyArray.length; j++)
                     enemyArray[j].y += enemyHeight; 
             }
-            if (enemy.canShoot)
-                enemyImg.src = "./enemyShipRed.png";
-            else
-                enemyImg.scr = "./enemyShip.png";
+
             
-            context.drawImage(enemyImg, enemy.x, enemy.y, enemy.width, enemy.height);
+            context.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
             
             if (enemy.y >= ship.y)
                 gameOver = true;
@@ -182,6 +182,7 @@ function update() {
 
         enemyArray = [];
         bulletArray = []; // clear bullets
+        enemyBulletArray = [];
         createEnemies();
     }
 
@@ -245,23 +246,19 @@ function createEnemies() {
     for (let col = 0; col < enemyPerColumn; col++){
         for (let row=0; row < enemyPerRow; row++){
             let canShootVal = false;
-            enemyImg = new Image();
+       
             
-
+            //find the enemy ship that can shoot
             for (let i=0; i<storeRow.length; i++){
                 if (col === storeCol[i] && row === storeRow[i]){
                     canShootVal = true;
-                    enemyImg.src = "./enemyShipRed.png";
                     break;
                 }
             }
 
-            if (!canShootVal)
-                enemyImg.src = "./enemyShip.png";
-            
             //create enemy object
             let enemy = {
-                img : enemyImg,
+                img : canShootVal ? enemyImgRed : enemyImg,
                 x : enemyX + col*enemyWidth,
                 y : enemyY + row*enemyHeight,
                 width : enemyWidth,
@@ -270,10 +267,8 @@ function createEnemies() {
                 canShoot : canShootVal
             }
 
-            if (enemy.canShoot){
-                setInterval(()=>{enemyShoot(enemy.x, enemy.y)}, getRandomInt(1,5)*1000);   
-            }
-
+            if (canShootVal)
+                setInterval(()=>{enemyShoot(enemy.x, enemy.y)}, getRandomInt(1,5)*1000);
 
             enemyArray.push(enemy);
         }
