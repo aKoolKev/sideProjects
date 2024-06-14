@@ -21,7 +21,8 @@ let ship = {
     x: shipX,
     y: shipY,
     width: shipWidth,
-    height: shipHeight
+    height: shipHeight,
+    alive : true
 }
 
 //enemy
@@ -43,6 +44,8 @@ let enemyBulletVelocityY = 5; //enemy shoots "down"
 //bullets
 let bulletArray = [];
 let bulletVelocityY = -10; //bullet moving speed
+
+let explosionImg;
 
 let score = 0;
 let levelCounter = 1;
@@ -77,8 +80,10 @@ window.onload = function() {
     enemyImgRed = new Image();
     enemyImgRed.src = './enemyShipRed.png';
 
-    createEnemies();
+    explosionImg = new Image();
+    explosionImg.src = './explosion.png';
 
+    createEnemies();
 
     requestAnimationFrame(update);
 
@@ -89,7 +94,9 @@ window.onload = function() {
 function update() {
 
     requestAnimationFrame(update);
-    
+
+
+
     if (gameOver){
         gameOverScreen();
         return;
@@ -97,9 +104,10 @@ function update() {
 
     //clear board 
     context.clearRect(0,0,board.width,board.height); 
-    
+
     //repeatedly drawing ship
     context.drawImage(shipImg, ship.x, ship.y, ship.width, ship.height);
+    
 
     //draw in alien
     for (let i=0; i<enemyArray.length; i++){
@@ -121,8 +129,9 @@ function update() {
             
             context.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
             
-            if (enemy.y >= ship.y)
+            if (enemy.y >= ship.y){
                 gameOver = true;
+            }
         }
     }
 
@@ -133,7 +142,25 @@ function update() {
         enemyBullet.y += enemyBulletVelocityY;
         context.fillStyle = "red";
         context.fillRect(enemyBullet.x, enemyBullet.y, enemyBullet.width, enemyBullet.height); 
+
+        //enemy bullet collision with player
+        for (let i=0; i<enemyBulletArray.length; i++){
+            let enemyBullet = enemyBulletArray[i];
+
+            if (!enemyBullet.used && ship.alive && detectCollision(enemyBullet, ship))
+            {
+                shipImg = explosionImg;
+                context.drawImage(shipImg, ship.x, ship.y, ship.width, ship.height);
+                gameOver = true;
+            }
+        }
+
     } 
+
+    //clear enemy bullets
+    while(enemyBulletArray.length > 0 && (enemyBulletArray[0].y >= board.height))
+        enemyBulletArray.shift(); //remove first element of array
+    
 
     //shoot user bullets
     for (let i=0; i< bulletArray.length; i++){
@@ -148,6 +175,20 @@ function update() {
             if (!bullet.used && enemy.alive && detectCollision(bullet, enemy)){
                 bullet.used = true;
                 enemy.alive = false;
+                enemy.img = explosionImg;
+
+                stopEnemyShooting(enemy.intervalID);
+
+                //show explosion for 5 seconds
+                context.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+               
+                setTimeout(() => {
+                    context.clearRect(0, 0, board.width, board.height);
+                }, 5000);
+
+
+                
+                context.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
                 enemyCount--;
                 score+=100;
             }
@@ -158,6 +199,7 @@ function update() {
     while(bulletArray.length > 0 && (bulletArray[0].used || bulletArray[0].y < 0))
         bulletArray.shift(); //remove first element of array
 
+    console.log('USER bulllets[] s: ' + bulletArray.length);
    
     // //clear bullets
     // while(bulletArray.length > 0 && (bulletArray[0].used || bulletArray[0].y < 0))
@@ -197,6 +239,7 @@ function update() {
 function moveShip(e) {
     if (gameOver)
         return;
+
     if (e.code == "ArrowLeft" && ship.x - shipVelocityX >= 0){
         ship.x -= shipVelocityX; //moving left one tile
     }
@@ -256,6 +299,11 @@ function createEnemies() {
                 }
             }
 
+            let intervalID; 
+
+            if (canShootVal)
+                intervalID = setInterval(()=>{enemyShoot(enemy.x, enemy.y)}, getRandomInt(1,5)*1000);
+
             //create enemy object
             let enemy = {
                 img : canShootVal ? enemyImgRed : enemyImg,
@@ -264,11 +312,9 @@ function createEnemies() {
                 width : enemyWidth,
                 height : enemyHeight,
                 alive : true,
-                canShoot : canShootVal
+                canShoot : canShootVal,
+                intervalID : intervalID
             }
-
-            if (canShootVal)
-                setInterval(()=>{enemyShoot(enemy.x, enemy.y)}, getRandomInt(1,5)*1000);
 
             enemyArray.push(enemy);
         }
@@ -300,7 +346,7 @@ function detectCollision(a, b){
 }
 
 function gameOverScreen() {
-    context.fillStyle='crimson';  
+    context.fillStyle='red';  
     context.font="50px courier";
     context.fillText("GAME OVER!", (board.width/2)-145, board.height/2);
 }
@@ -324,3 +370,12 @@ function enemyShoot(xPos, yPos){
 
     enemyBulletArray.push(bullet);
 }
+
+
+function stopEnemyShooting (intervalID){
+    clearInterval(intervalID);
+}
+/* 
+    [TO-DO]
+    * fix game over screen (Bug)
+*/
